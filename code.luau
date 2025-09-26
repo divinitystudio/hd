@@ -287,7 +287,7 @@ function Bots.Spawn(position: Vector3, gunName: string, team: string, botName)
                                                     --we generated exists since its just a bullet and it doesnt matter
             GunSystem.BotShoot(bulletId, gunModel, endPos)
  
-            task.wait(60 / GunStats[gunName].FireRate) --fireRate is in RPM
+            task.wait(60 / GunStats[gunName].FireRate)
         end
     end)
  
