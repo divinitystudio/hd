@@ -35,7 +35,7 @@ function Bots.Spawn(position: Vector3, gunName: string, team: string, botName)
     bot.Parent = workspace[`{team}Team`]
  
     for _, v in bot:GetDescendants() do
-        pcall(function() --pcalling to make sure it doesnt error (if setnetworkowner isnt a member of v or if v is anchored or wtv)
+        pcall(function() --pcalling to make sure it doesnt error (if setnetworkowner isnt a member of v or if v is anchored...)
             v:SetNetworkOwner(nil)
         end)
     end
@@ -65,9 +65,9 @@ function Bots.Spawn(position: Vector3, gunName: string, team: string, botName)
         m6d.Parent = gunModel
     end
  
-    gunModel.Parent = bot --parenting it last so its less glitchy and could save performance
+    gunModel.Parent = bot
  
-    local idleGunAnim = humanoid.Animator:LoadAnimation(gunModel.Animations.Idle)
+    local idleGunAnim = humanoid.Animator:LoadAnimation(gunModel.Animations.Idle) --loading anims to animator instead of to humanoid since humanoid is depracated ＜（＾－＾）＞
     idleGunAnim:Play()
     local walkAnim = humanoid.Animator:LoadAnimation(ReplicatedStorage.Animations.Run)
     local idleAnim = humanoid.Animator:LoadAnimation(bot.Animate.idle.Animation1)
@@ -93,7 +93,7 @@ function Bots.Spawn(position: Vector3, gunName: string, team: string, botName)
             local waypoints = path:GetWaypoints()
  
             for i = 2, #waypoints do --starting from 2nd waypoint since 1st is same as the bots position
-                if i >= #waypoints + 1 then --if we reached the end we set the walktopoint to hrp pos so the walktopoint effectively                                            --resets
+                if i >= #waypoints + 1 then --if we reached the end we set the walktopoint to hrp pos so the walktopoint effectively resets
                     humanoid.WalkToPoint = hrp.Position
                     break
                 end
@@ -142,7 +142,7 @@ function Bots.Spawn(position: Vector3, gunName: string, team: string, botName)
                     walkAnim:Play()
                 end
             else
-                killThread = task.delay(15, function() --if bot hasnt moved for 15 seconds then its probably its stuck on a wall so                                                        --we kill it
+                killThread = task.delay(30, function() --if bot hasnt moved for 30 seconds then its probably its stuck on a wall so we kill it
                     if target then
                         return
                     end
@@ -175,9 +175,9 @@ function Bots.Spawn(position: Vector3, gunName: string, team: string, botName)
                     )
             end
  
-            task.wait(math.random(20, 50) / 10) --math.random(2, 5) would just return values: 2,3,4,5, math.random(20, 50) / 10 will                                                 --return values: 2, 2.6, 4.2, ...
+            task.wait(math.random(20, 50) / 10) --math.random(2, 5) would just return values: 2,3,4,5, math.random(20, 50) / 10 will return values: 2, 2.6, 4.2, ...
             if not bot or not bot:IsDescendantOf(workspace) or not bot:FindFirstChild("Humanoid") then
-                break --the bot variable wont be nil even if the bot has been destroyed so we check if its a descendant of workspace                        --as well and the bot also could exist but not have any children so we check for humanoid
+                break --the bot variable wont be nil even if the bot has been destroyed so we check if its a descendant of workspace as well and the bot also could exist but not have any children so we check for humanoid
             end
             bot.Humanoid.WalkToPoint = hrp.Position
         end
@@ -283,8 +283,7 @@ function Bots.Spawn(position: Vector3, gunName: string, team: string, botName)
                 math.random(10, 20) / if math.random(1, 2) == 2 then -10 else 10,
                 math.random(10, 20) / if math.random(1, 2) == 2 then -10 else 10
             ) / (accuracy * 2.2)
-            local bulletId = math.random(1, 65000) --this doesnt have to be a giant number and we dont need to check if the bullet id
-                                                    --we generated exists since its just a bullet and it doesnt matter
+            local bulletId = math.random(1, 65000) --we dont need to check if the bullet id we generated exists since its just a bullet and it doesnt matter
             GunSystem.BotShoot(bulletId, gunModel, endPos)
  
             task.wait(60 / GunStats[gunName].FireRate)
